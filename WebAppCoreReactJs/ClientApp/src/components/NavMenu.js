@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   Collapse,
   Container,
@@ -10,68 +10,64 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
+import { useToken } from "../Context";
 
-export default class NavMenu extends Component {
-  static displayName = NavMenu.name;
+const NavMenu = () => {
+  const [collapsed, setCollapsed] = useState(true);
+  const [token, isToken] = useToken();
+  const toggleNavbar = () => {
+    setCollapsed(!collapsed);
+  };
 
-  constructor(props) {
-    super(props);
-
-    this.toggleNavbar = this.toggleNavbar.bind(this);
-    this.state = {
-      collapsed: true
-    };
-  }
-
-  toggleNavbar() {
-    this.setState({
-      collapsed: !this.state.collapsed
-    });
-  }
-
-  render() {
-    return (
-      <header>
-        <Navbar
-          className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
-          light
-        >
-          <Container>
-            <NavbarBrand tag={Link} to="/">
-              WebAppCoreReactJs
-            </NavbarBrand>
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-            <Collapse
-              className="d-sm-inline-flex flex-sm-row-reverse"
-              isOpen={!this.state.collapsed}
-              navbar
-            >
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">
-                    Home
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">
-                    Counter
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/fetch-data">
-                    Fetch data
-                  </NavLink>
-                </NavItem>
-                <NavItem>
+  return (
+    <header>
+      <Navbar
+        className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
+        light
+      >
+        <Container>
+          <NavbarBrand tag={Link} to="/">
+            WebAppCoreReactJs
+          </NavbarBrand>
+          <NavbarToggler onClick={toggleNavbar} className="mr-2" />
+          <Collapse
+            className="d-sm-inline-flex flex-sm-row-reverse"
+            isOpen={!collapsed}
+            navbar
+          >
+            <ul className="navbar-nav flex-grow">
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/">
+                  Home
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/counter">
+                  Counter
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/fetch-data">
+                  Fetch data
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                {!isToken ? (
                   <NavLink tag={Link} className="text-dark" to="/login">
                     Login
                   </NavLink>
-                </NavItem>
-              </ul>
-            </Collapse>
-          </Container>
-        </Navbar>
-      </header>
-    );
-  }
-}
+                ) : (
+                  <NavLink tag={Link} className="text-dark" to="/logoff">
+                    Logoff
+                  </NavLink>
+                )}
+              </NavItem>
+            </ul>
+          </Collapse>
+        </Container>
+      </Navbar>
+    </header>
+  );
+};
+
+export default NavMenu;

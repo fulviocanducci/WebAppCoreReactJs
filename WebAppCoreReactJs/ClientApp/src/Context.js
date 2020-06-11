@@ -4,13 +4,14 @@ const Context = createContext();
 
 const Provider = ({ children }) => {
     const [token, setToken] = useState(() => {
-        return window.localStorage.getItem("@token");
+        const _token = window.localStorage.getItem("@token");
+        return _token && _token.length > 0 ? _token : ""; 
     });
     useEffect(() => {
-        window.localStorage.setItem("@token", JSON.stringify(token));
+        window.localStorage.setItem("@token", token);
     }, [token]);
     const handleSetToken = (value) => setToken(value);
-    const handleRemoveToken = () => setToken(null);
+    const handleRemoveToken = () => setToken("");
     return (
         <Context.Provider value={{ token, handleSetToken, handleRemoveToken }}>
         {children}
@@ -21,7 +22,7 @@ const Provider = ({ children }) => {
 export const useToken = () => {
     const context = useContext(Context);
     const { token } = context;
-    const isToken = token !== null;
+    const isToken = token && token.length > 0;
     return [token, isToken];
 }
 

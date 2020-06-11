@@ -1,4 +1,4 @@
-﻿import React from "react";
+﻿import React, { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useTokenHandle, useToken } from "./../Context";
@@ -23,17 +23,20 @@ const formLoginValidationSchema = Yup.object().shape({
     .strict()
 });
 
-const Login = () => {
+const Login = ({ history }) => {
   const [handleSetToken, handleRemoveToken] = useTokenHandle();
   const [token, isToken] = useToken();
   const onFormSubmit = values => {
-    handleSetToken(JSON.stringify(values));
+    handleSetToken(values.email);
+    history.push("/");
   };
+  useEffect(() => {
+    if (isToken) history.push("/logoff");
+  });
   const onSetClassValidOrInValid = (e, t) =>
     e && t ? "form-control is-invalid" : "form-control is-valid";
   return (
     <div className="container">
-      {isToken ? "true" : "false"}
       <Formik
         initialValues={formLoginDefaultValue}
         validationSchema={formLoginValidationSchema}
